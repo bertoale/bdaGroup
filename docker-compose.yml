@@ -1,0 +1,33 @@
+services:
+  nginx:
+    image: bertoale72/bda-group-nginx:latest
+    container_name: bda-group-nginx
+    restart: unless-stopped
+    ports:
+      - "8095:80"
+    depends_on:
+      - app
+    networks:
+      - default
+      - npm_network
+
+  app:
+    image: bertoale72/bda-group-app:latest
+    container_name: bda-group-app
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    expose:
+      - "3000"
+    networks:
+      - default
+      - mysql_network
+
+networks:
+  default:
+  mysql_network:
+    name: mysql_network
+    external: true
+  npm_network:
+    name: npm_network
+    external: true
