@@ -6,9 +6,30 @@ let storageClient: Storage | null = null;
 function getStorageClient(): Storage {
   if (storageClient) return storageClient;
 
+  // 1. Prioritaskan GCS_CREDENTIALS (raw JSON atau base64-encoded JSON)
+  const credentialsEnv = process.env.GCS_CREDENTIALS;
+  if (credentialsEnv) {
+    try {
+      let rawJson = credentialsEnv.trim();
+      // Handle base64 encoded string jika user menyimpannya sebagai base64
+      if (!rawJson.startsWith("{")) {
+        rawJson = Buffer.from(rawJson, "base64").toString("utf-8");
+      }
+      const credentials = JSON.parse(rawJson);
+      storageClient = new Storage({ credentials });
+      return storageClient;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      throw new Error(`Failed to parse GCS_CREDENTIALS: ${msg}`);
+    }
+  }
+
+  // 2. Fallback ke file path GCS_KEY_FILE (untuk local development)
   const keyFilePath = process.env.GCS_KEY_FILE;
   if (!keyFilePath) {
-    throw new Error("GCS_KEY_FILE environment variable is missing.");
+    throw new Error(
+      "GCS credentials missing: please set either GCS_CREDENTIALS (JSON/base64) or GCS_KEY_FILE (file path)."
+    );
   }
   if (!fs.existsSync(keyFilePath)) {
     throw new Error(`GCS key file not found at path: ${keyFilePath}`);
