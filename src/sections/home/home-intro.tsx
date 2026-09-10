@@ -9,9 +9,30 @@ export function HomeIntro() {
   return (
     <section
       id="introduction"
-      className="relative w-full bg-transparent text-foreground py-16 sm:py-24 px-6 sm:px-10 md:px-14 lg:px-20 overflow-hidden border-b border-border/60"
+      className="relative w-full bg-transparent text-foreground pt-16 pb-10 sm:pt-24 sm:pb-14 px-6 sm:px-10 md:px-14 lg:px-20 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full">
+      {/* Decorative Corner Ornaments with subtle opacity */}
+      <div className="absolute top-0 right-0 w-64 sm:w-96 md:w-[28rem] lg:w-[32rem] aspect-square pointer-events-none select-none z-0 opacity-25 transition-opacity">
+        <Image
+          src="https://storage.googleapis.com/bda_rental/bda-group/images/top-right.png"
+          alt="Top Right Corner Accent"
+          fill
+          unoptimized
+          className="object-contain object-top-right"
+        />
+      </div>
+
+      <div className="absolute bottom-0 left-0 w-64 sm:w-96 md:w-[28rem] lg:w-[32rem] aspect-square pointer-events-none select-none z-0 opacity-25 transition-opacity">
+        <Image
+          src="https://storage.googleapis.com/bda_rental/bda-group/images/bottom-left.png"
+          alt="Bottom Left Corner Accent"
+          fill
+          unoptimized
+          className="object-contain object-bottom-left"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         {/* --- MOBILE & TABLET LAYOUT (< lg): Unified Integrated Card --- */}
         <Reveal
           animation="fade-up"

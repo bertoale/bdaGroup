@@ -15,7 +15,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Best Deals Asia Group | Premier Property, Hospitality & Digital Hub Bali",
+  title: "Best Deals Asia Group",
   description:
     "Your premier destination for comprehensive solutions within the property industry in Bali, Indonesia. Holiday rental accommodation, villa management, real estate, maintenance, events, and digital solutions.",
   icons: {
@@ -24,12 +24,25 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // Server-rendered: reads directly from process.env without NEXT_PUBLIC_ bake requirement
+  const leadstreamsBaseUrl = process.env.LEADSTREAMS_BASE_URL || "https://leadstreams.bestdealsdigitalsolutions.com";
+  const leadstreamsWebsiteId = process.env.LEADSTREAMS_WEBSITE_ID;
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        {children}
+        {leadstreamsWebsiteId && (
+          <script
+            src={`${leadstreamsBaseUrl.replace(/\/+$/, "")}/static/widget.js`}
+            data-website-id={leadstreamsWebsiteId}
+            defer
+          />
+        )}
+      </body>
     </html>
   );
 }

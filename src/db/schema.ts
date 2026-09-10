@@ -75,3 +75,24 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
+// ==========================================
+// 4. LEADS TABLE (Contact Us Inquiries)
+// ==========================================
+export const leads = mysqlTable("leads", {
+  id: bigint("id", { mode: "number", unsigned: true }).primaryKey().autoincrement(),
+  fullName: varchar("full_name", { length: 255 }).notNull(),
+  email: varchar("email_address", { length: 255 }).notNull(),
+  phone: varchar("phone_number", { length: 50 }),
+  topic: varchar("topic", { length: 255 }).default("General Inquiry"),
+  message: text("message").notNull(),
+  source: varchar("source", { length: 100 }).default("contact_form"),
+  status: mysqlEnum("status", ["new", "contacted", "closed"]).default("new").notNull(),
+  isDeleted: boolean("is_deleted").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type Lead = typeof leads.$inferSelect;
+export type NewLead = typeof leads.$inferInsert;
+
+

@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   ExternalLink,
   Plus,
+  Inbox,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -128,6 +129,26 @@ export default async function AdminDashboardPage() {
                 </h4>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Tinjau berkas CV pelamar dan atur lowongan pekerjaan aktif
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="size-4 text-slate-400 group-hover:text-brand-navy group-hover:translate-x-1 transition-all" />
+          </Link>
+
+          <Link
+            href="/admin/leads"
+            className="p-5 rounded-2xl border border-slate-200 hover:border-brand-navy/40 hover:bg-slate-50 transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-2xl bg-brand-sand flex items-center justify-center text-brand-navy group-hover:scale-105 transition-transform">
+                <Inbox className="size-6 text-brand-gold" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-brand-navy">
+                  Leads & Contact Inquiries
+                </h4>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Lihat dan tindak lanjuti pesan masuk dari halaman Contact Us
                 </p>
               </div>
             </div>

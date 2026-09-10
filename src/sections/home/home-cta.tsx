@@ -43,13 +43,15 @@ export function HomeCta() {
 
             {/* Right Action Buttons */}
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
-              <Link
-                href="/market-your-place"
+              <a
+                href="https://bestdealsasiahospitality.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-hover text-brand-navy text-xs sm:text-sm font-bold px-7 py-3.5 rounded-full shadow-lg transition-all text-center group"
               >
                 <span>Market Your Place</span>
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
+              </a>
 
               <Link
                 href="/contact"

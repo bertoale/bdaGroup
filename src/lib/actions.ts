@@ -55,3 +55,26 @@ export async function logoutAdminAction() {
   await clearAdminSession();
   redirect("/login");
 }
+
+export async function submitContactLeadAction(formData: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  topic?: string;
+  message: string;
+}) {
+  if (!formData.fullName || !formData.email || !formData.message) {
+    return { success: false, error: "Name, email, and message are required." };
+  }
+
+  const { createLead } = await import("./lead-service");
+  return await createLead({
+    fullName: formData.fullName,
+    email: formData.email,
+    phone: formData.phone,
+    topic: formData.topic,
+    message: formData.message,
+    source: "contact_us_page",
+  });
+}
+

@@ -11,8 +11,12 @@ import {
   GoogleMapsIcon,
 } from "@/components/ui/social-icons";
 
+import { submitContactLeadAction } from "@/lib/actions";
+
 export function ContactSection() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -21,9 +25,31 @@ export function ContactSection() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      const res = await submitContactLeadAction({
+        fullName: formState.name,
+        email: formState.email,
+        phone: formState.phone,
+        topic: formState.businessInterest,
+        message: formState.message,
+      });
+
+      if (res.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMessage(res.error || "Failed to submit inquiry. Please try again.");
+      }
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setErrorMessage(error.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -272,11 +298,18 @@ export function ContactSection() {
                     />
                   </div>
 
+                  {errorMessage && (
+                    <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
+                      {errorMessage}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-hover text-brand-navy font-bold text-xs sm:text-sm px-8 py-3.5 rounded-xl shadow-sm transition-all cursor-pointer"
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-hover text-brand-navy font-bold text-xs sm:text-sm px-8 py-3.5 rounded-xl shadow-sm transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <span>Submit Message</span>
+                    <span>{isSubmitting ? "Submitting..." : "Submit Message"}</span>
                     <Send className="size-4" />
                   </button>
                 </form>

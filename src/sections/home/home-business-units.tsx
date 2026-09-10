@@ -11,13 +11,23 @@ export function HomeBusinessUnits() {
   return (
     <section
       id="businesses"
-      className="relative w-full py-16 sm:py-24 px-6 sm:px-10 md:px-14 lg:px-20 bg-transparent text-foreground overflow-hidden"
+      className="relative w-full py-16 sm:py-24 px-6 sm:px-10 md:px-14 lg:px-20 bg-transparent text-foreground overflow-hidden border-t border-border/40"
     >
+      {/* Pattern Loop Repeating Background */}
+      <div
+        className="absolute inset-0 pointer-events-none select-none z-0 opacity-15"
+        style={{
+          backgroundImage: "url('https://storage.googleapis.com/bda_rental/bda-group/images/pattern.png')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "320px 320px",
+        }}
+      />
+
       {/* Decorative ambient background accents */}
       <div className="absolute top-1/4 -left-48 w-96 h-96 bg-brand-sand/40 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20 sm:mb-28">
           <Reveal animation="fade-up" durationMs={700} delayMs={100}>

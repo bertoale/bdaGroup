@@ -37,7 +37,28 @@ export function HomeWhyUs() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 px-6 sm:px-10 md:px-14 lg:px-20 bg-brand-sand/35 backdrop-blur-[2px] relative border-b border-border/70 overflow-hidden">
+    <section className="pt-10 pb-16 sm:pt-14 sm:py-24 px-6 sm:px-10 md:px-14 lg:px-20 bg-transparent text-foreground relative border-b border-border/70 overflow-hidden">
+      {/* Decorative Corner Ornaments with flip vertical */}
+      <div className="absolute top-0 left-0 w-64 sm:w-96 md:w-[28rem] lg:w-[32rem] aspect-square pointer-events-none select-none z-0 opacity-25 transition-opacity scale-y-[-1]">
+        <Image
+          src="https://storage.googleapis.com/bda_rental/bda-group/images/bottom-left.png"
+          alt="Top Left Inverted Accent"
+          fill
+          unoptimized
+          className="object-contain object-bottom-left"
+        />
+      </div>
+
+      <div className="absolute bottom-0 right-0 w-64 sm:w-96 md:w-[28rem] lg:w-[32rem] aspect-square pointer-events-none select-none z-0 opacity-25 transition-opacity scale-y-[-1]">
+        <Image
+          src="https://storage.googleapis.com/bda_rental/bda-group/images/top-right.png"
+          alt="Bottom Right Inverted Accent"
+          fill
+          unoptimized
+          className="object-contain object-top-right"
+        />
+      </div>
+
       {/* Luxury Mesh Gradient Glow Orbs */}
       <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-bl from-brand-gold/20 via-brand-gold/5 to-transparent rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-brand-navy/10 via-brand-gold/10 to-transparent rounded-full blur-[110px] pointer-events-none -translate-x-1/3 translate-y-1/3" />
