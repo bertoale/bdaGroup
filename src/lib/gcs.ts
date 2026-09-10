@@ -13,9 +13,29 @@ function getStorageClient(): Storage {
       let rawJson = credentialsEnv.trim();
       // Handle base64 encoded string jika user menyimpannya sebagai base64
       if (!rawJson.startsWith("{")) {
-        rawJson = Buffer.from(rawJson, "base64").toString("utf-8");
+        rawJson = Buffer.from(rawJson, "base64").toString("utf-8").trim();
       }
-      const credentials = JSON.parse(rawJson);
+
+      let credentials;
+      try {
+        credentials = JSON.parse(rawJson);
+      } catch {
+        // Jika gagal karena literal newlines/control characters di dalam private_key,
+        // sanitize control characters yang tidak ter-escape
+        const sanitized = rawJson.replace(/[\n\r\t]/g, (match) => {
+          if (match === "\n") return "\\n";
+          if (match === "\r") return "\\r";
+          if (match === "\t") return "\\t";
+          return match;
+        });
+        credentials = JSON.parse(sanitized);
+      }
+
+      // Pastikan newline di private_key ter-parse dengan benar jika masih literal '\n'
+      if (credentials && credentials.private_key) {
+        credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
+      }
+
       storageClient = new Storage({ credentials });
       return storageClient;
     } catch (err: unknown) {
