@@ -36,9 +36,10 @@ function getStorageClient(): Storage {
       try {
         credentials = JSON.parse(rawJson);
       } catch {
-        // Jika JSON.parse gagal karena unescaped newlines/tabs di private_key,
-        // kita bersihkan karakter kontrol berbahaya (ASCII 0-31) kecuali yang sudah di-escape
-        const sanitized = rawJson.replace(/[\u0000-\u001F\u007F-\u009F]/g, (ch) => {
+        // 1. Perbaiki invalid escape characters (seperti \- atau \M atau \ ) -> jadikan \\
+        let sanitized = rawJson.replace(/\\(?!["\\/bfnrt]|u[0-9a-fA-F]{4})/g, "\\\\");
+        // 2. Perbaiki unescaped control characters (newline, tab) di dalam string
+        sanitized = sanitized.replace(/[\u0000-\u001F\u007F-\u009F]/g, (ch) => {
           if (ch === "\n") return "\\n";
           if (ch === "\r") return "\\r";
           if (ch === "\t") return "\\t";
@@ -47,7 +48,7 @@ function getStorageClient(): Storage {
         credentials = JSON.parse(sanitized);
       }
 
-      // Pastikan private_key memiliki real newlines untuk OpenSSL / Google Auth
+      // Pastikan private_key memiliki real newlines untuk Google Auth / OpenSSL
       if (credentials && typeof credentials.private_key === "string") {
         credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
       }
