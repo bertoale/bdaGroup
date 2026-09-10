@@ -11,28 +11,44 @@ function getStorageClient(): Storage {
   if (credentialsEnv) {
     try {
       let rawJson = credentialsEnv.trim();
-      // Handle base64 encoded string jika user menyimpannya sebagai base64
-      if (!rawJson.startsWith("{")) {
-        rawJson = Buffer.from(rawJson, "base64").toString("utf-8").trim();
+
+      // Handle jika di-wrap dengan tanda petik pembungkus (misal '...' atau "...") dari .env
+      if (
+        (rawJson.startsWith("'") && rawJson.endsWith("'")) ||
+        (rawJson.startsWith('"') && rawJson.endsWith('"'))
+      ) {
+        rawJson = rawJson.slice(1, -1).trim();
       }
 
-      let credentials;
+      // Handle base64 encoded string
+      if (!rawJson.startsWith("{")) {
+        try {
+          const decoded = Buffer.from(rawJson, "base64").toString("utf-8").trim();
+          if (decoded.startsWith("{")) {
+            rawJson = decoded;
+          }
+        } catch {
+          // ignore decode error and proceed
+        }
+      }
+
+      let credentials: Record<string, any>;
       try {
         credentials = JSON.parse(rawJson);
       } catch {
-        // Jika gagal karena literal newlines/control characters di dalam private_key,
-        // sanitize control characters yang tidak ter-escape
-        const sanitized = rawJson.replace(/[\n\r\t]/g, (match) => {
-          if (match === "\n") return "\\n";
-          if (match === "\r") return "\\r";
-          if (match === "\t") return "\\t";
-          return match;
+        // Jika JSON.parse gagal karena unescaped newlines/tabs di private_key,
+        // kita bersihkan karakter kontrol berbahaya (ASCII 0-31) kecuali yang sudah di-escape
+        const sanitized = rawJson.replace(/[\u0000-\u001F\u007F-\u009F]/g, (ch) => {
+          if (ch === "\n") return "\\n";
+          if (ch === "\r") return "\\r";
+          if (ch === "\t") return "\\t";
+          return "";
         });
         credentials = JSON.parse(sanitized);
       }
 
-      // Pastikan newline di private_key ter-parse dengan benar jika masih literal '\n'
-      if (credentials && credentials.private_key) {
+      // Pastikan private_key memiliki real newlines untuk OpenSSL / Google Auth
+      if (credentials && typeof credentials.private_key === "string") {
         credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
       }
 
