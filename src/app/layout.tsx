@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   // Server-rendered: reads directly from process.env without NEXT_PUBLIC_ bake requirement
   const leadstreamsBaseUrl = process.env.LEADSTREAMS_BASE_URL || "https://leadstreams.bestdealsdigitalsolutions.com";
